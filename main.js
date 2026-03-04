@@ -336,7 +336,7 @@ const gltfLoader = new GLTFLoader();
 
 async function initThreeJS() {
     try {
-        const gltf = await gltfLoader.loadAsync("assets/panther.glb");
+        const gltf = await gltfLoader.loadAsync("/assets/panther.glb");
         const panther = gltf.scene;
 
         // Center and scale
@@ -703,6 +703,11 @@ function setupScrollAnimations() {
 //  9. INITIALIZATION
 // ═══════════════════════════════════════════════════════════
 async function init() {
+    // Set initial hidden state for hero text (GSAP manages transforms)
+    gsap.set(".line-mask__inner", { yPercent: 110 });
+    gsap.set(".hero__tag", { opacity: 0 });
+    gsap.set(".hero__scroll-hint", { opacity: 0 });
+
     // Start all systems
     initCursorTrail();
     initMagneticButtons();

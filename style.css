@@ -346,7 +346,6 @@ img {
     letter-spacing: -0.06em;
     line-height: 0.9;
     text-transform: uppercase;
-    transform: translateY(110%);
     will-change: transform;
 }
 
