@@ -309,17 +309,6 @@ scene.background = new THREE.Color(0xF1F0F6);
 const camera = new THREE.PerspectiveCamera(30, innerWidth / innerHeight, 0.1, 100);
 camera.position.set(0, 0.5, 5);
 
-const renderer = new THREE.WebGLRenderer({ canvas: threeCanvas, antialias: true });
-renderer.setSize(innerWidth, innerHeight);
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.enableZoom = false;
-controls.enablePan = false;
-controls.autoRotate = true;
-controls.autoRotateSpeed = 1.2;
-
 // Lights
 scene.add(new THREE.AmbientLight(0xffffff, Math.PI * 0.8));
 const dirLight = new THREE.DirectionalLight(0xffffff, Math.PI * 0.6);
@@ -329,12 +318,33 @@ const rimLight = new THREE.DirectionalLight(0x9B59B6, Math.PI * 0.2);
 rimLight.position.set(-3, 2, -4);
 scene.add(rimLight);
 
-const blob = new Blob(renderer);
+let renderer, controls, blob;
+let hasWebGL = true;
+
+try {
+    renderer = new THREE.WebGLRenderer({ canvas: threeCanvas, antialias: true, powerPreference: "default" });
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.enableZoom = false;
+    controls.enablePan = false;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 1.2;
+
+    blob = new Blob(renderer);
+} catch (error) {
+    console.warn("WebGL não suportado ou placa de vídeo muito antiga. Desativando o ambiente 3D.", error);
+    hasWebGL = false;
+    if (threeCanvas) threeCanvas.style.display = "none";
+}
 
 // ── Load Panther ──
 const gltfLoader = new GLTFLoader();
 
 async function initThreeJS() {
+    if (!hasWebGL) return;
     try {
         const gltf = await gltfLoader.loadAsync("/assets/panther.glb");
         const panther = gltf.scene;
@@ -436,7 +446,7 @@ const clock = new THREE.Clock();
 let threeRunning = false;
 
 function startThreeLoop() {
-    if (threeRunning) return;
+    if (!hasWebGL || threeRunning) return;
     threeRunning = true;
 
     renderer.setAnimationLoop(() => {
@@ -450,6 +460,7 @@ function startThreeLoop() {
 }
 
 function stopThreeLoop() {
+    if (!hasWebGL) return;
     threeRunning = false;
     renderer.setAnimationLoop(null);
 }
@@ -458,9 +469,11 @@ function stopThreeLoop() {
 window.addEventListener("resize", () => {
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(innerWidth, innerHeight);
-    gu.aspect.value = camera.aspect;
-    blob.setSize(innerWidth, innerHeight);
+    if (hasWebGL) {
+        renderer.setSize(innerWidth, innerHeight);
+        gu.aspect.value = camera.aspect;
+        blob.setSize(innerWidth, innerHeight);
+    }
 });
 
 // ═══════════════════════════════════════════════════════════
@@ -592,6 +605,7 @@ function setupScrollAnimations() {
         end: "top 40%",
         scrub: true,
         onUpdate: (self) => {
+            if (!hasWebGL) return;
             const p = self.progress;
             const start = new THREE.Color(0xF1F0F6);
             const end = new THREE.Color(0x08080c);
