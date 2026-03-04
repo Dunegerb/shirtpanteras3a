@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PANTERAS 3A — Colégio Estadual Santa Edwiges 2026</title>
+    <meta name="description"
+        content="Apresentação oficial da camisa exclusiva do 3ºA — Panteras. Colégio Estadual Santa Edwiges, 2026." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet" />
+
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <!-- ═══ MOBILE BLOCK ═══ -->
+    <div id="mobile-block">
+        <div class="mobile-block__inner">
+            <div class="mobile-block__icon">⊘</div>
+            <h1>DESKTOP ONLY</h1>
+            <p>Este site foi projetado exclusivamente para visualização em computadores.<br />Por favor, acesse de um
+                desktop.</p>
+        </div>
+    </div>
+
+    <!-- ═══ CURSOR TRAIL CANVAS ═══ -->
+    <canvas id="cursor-trail"></canvas>
+
+    <!-- ═══ LOADER ═══ -->
+    <div id="loader">
+        <div class="loader__content">
+            <div class="loader__top-line">
+                <span class="loader__year">2026</span>
+                <span class="loader__dot">●</span>
+                <span class="loader__school-name" data-scramble>COLÉGIO ESTADUAL SANTA EDWIGES</span>
+            </div>
+            <h1 class="loader__title">
+                <span class="loader__title-line" data-scramble>PANTERAS</span>
+                <span class="loader__title-line loader__title-line--accent" data-scramble>3ºA</span>
+            </h1>
+            <div class="loader__bottom">
+                <div class="loader__progress-track">
+                    <div class="loader__progress-bar" id="loader-bar"></div>
+                </div>
+                <span class="loader__percent" id="loader-percent">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ THREE.JS CANVAS ═══ -->
+    <canvas id="three-canvas"></canvas>
+
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <main id="content">
+
+        <!-- ── SECTION 01 — HERO ── -->
+        <section class="section section--hero" id="hero">
+            <div class="hero__content">
+                <p class="hero__tag">
+                    <span class="hero__tag-line"></span>
+                    COLÉGIO ESTADUAL SANTA EDWIGES — 2026
+                </p>
+                <h1 class="hero__title" id="hero-title">
+                    <span class="line-mask"><span class="line-mask__inner">PANTERAS</span></span>
+                    <span class="line-mask"><span class="line-mask__inner line-mask__inner--outline">3ºA</span></span>
+                </h1>
+                <p class="hero__subtitle">
+                    <span class="line-mask"><span class="line-mask__inner">FEROCIDADE · UNIÃO · LEGADO</span></span>
+                </p>
+            </div>
+            <div class="hero__scroll-hint">
+                <span>SCROLL</span>
+                <div class="hero__scroll-line"></div>
+            </div>
+        </section>
+
+        <!-- ── SECTION 02 — SHIRT GRAND REVEAL (Pinned Zoom) ── -->
+        <section class="section section--shirt-reveal" id="shirt-reveal">
+            <div class="shirt-reveal__sticky" id="shirt-sticky">
+                <div class="shirt-reveal__vignette"></div>
+                <img src="assets/shirt.png" alt="Camisa Panteras 3A — Vista Frontal" class="shirt-reveal__img"
+                    id="shirt-zoom-img" />
+                <div class="shirt-reveal__text-overlay">
+                    <p class="shirt-reveal__caption">A CAMISA</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── SECTION 03 — SHIRT DETAILS ── -->
+        <section class="section section--details" id="details">
+            <div class="details__grid">
+                <div class="details__text">
+                    <p class="section__tag">01</p>
+                    <h2 class="section__title">A CAMISA<br />OFICIAL</h2>
+                    <p class="section__body">
+                        Cada detalhe foi pensado para representar a força e a garra do 3ºA.
+                        Uma peça que carrega a identidade da turma — ousada, imponente, inesquecível.
+                        A pantera negra estampa o orgulho de uma turma que nunca recuou.
+                    </p>
+                </div>
+                <div class="details__image">
+                    <div class="reveal-wrapper">
+                        <img src="assets/shirt-full.jpg" alt="Camisa Panteras 3A — Detalhe" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── SECTION 04 — MARQUEE ── -->
+        <div class="marquee-section" id="marquee">
+            <div class="marquee__track">
+                <div class="marquee__content">
+                    <span>PANTERAS</span>
+                    <span class="marquee__dot">◆</span>
+                    <span>3ºA</span>
+                    <span class="marquee__dot">◆</span>
+                    <span>FEROCIDADE</span>
+                    <span class="marquee__dot">◆</span>
+                    <span>UNIÃO</span>
+                    <span class="marquee__dot">◆</span>
+                    <span>LEGADO</span>
+                    <span class="marquee__dot">◆</span>
+                    <span>2026</span>
+                    <span class="marquee__dot">◆</span>
+                </div>
+                <div class="marquee__content" aria-hidden="true">
+                    <span>PANTERAS</span>
+                    <span class="marquee__dot">◆</span>
+                    <span>3ºA</span>
+                    <span class="marquee__dot">◆</span>
+                    <span>FEROCIDADE</span>
+                    <span class="marquee__dot">◆</span>
+                    <span>UNIÃO</span>
+                    <span class="marquee__dot">◆</span>
+                    <span>LEGADO</span>
+                    <span class="marquee__dot">◆</span>
+                    <span>2026</span>
+                    <span class="marquee__dot">◆</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── SECTION 05 — 3D PANTHER ── -->
+        <section class="section section--pantera" id="pantera">
+            <div class="pantera__overlay">
+                <p class="pantera__label">INTERAJA COM O CURSOR</p>
+                <h2 class="pantera__title">PANTERA</h2>
+                <p class="pantera__desc">O ESPÍRITO DO TIME</p>
+            </div>
+        </section>
+
+        <!-- ── SECTION 06 — STORYTELLING ── -->
+        <section class="section section--story" id="story">
+            <div class="story__container">
+                <p class="section__tag">A HISTÓRIA</p>
+                <h2 class="section__title story__title">A ORIGEM<br />DA MARCA</h2>
+
+                <div class="story__blocks">
+                    <div class="story__block" data-reveal>
+                        <span class="story__number">01</span>
+                        <p class="story__text">
+                            Quando a turma do 3ºA do Colégio Estadual Santa Edwiges decidiu criar sua
+                            identidade, não queria algo comum. Queriam um símbolo que representasse tudo
+                            o que viveram juntos — a força nos momentos difíceis, a lealdade entre amigos
+                            e a coragem de quem está prestes a enfrentar o mundo.
+                        </p>
+                    </div>
+
+                    <div class="story__block" data-reveal>
+                        <span class="story__number">02</span>
+                        <p class="story__text">
+                            A escolha da <strong>pantera negra</strong> foi unânime. A pantera é o animal que se
+                            move com elegância silenciosa, mas carrega uma força devastadora. Ela não
+                            precisa rugir para ser temida — sua presença basta. Assim como a turma:
+                            discreta quando precisa, implacável quando necessário.
+                        </p>
+                    </div>
+
+                    <div class="story__block" data-reveal>
+                        <span class="story__number">03</span>
+                        <p class="story__text">
+                            O processo de criação do emblema foi colaborativo. Cada detalhe discutido,
+                            cada traço votado. O roxo profundo escolhido como cor de destaque representa
+                            a nobreza e a ambição. O resultado final é mais do que uma camiseta — é um
+                            escudo que cada aluno carrega com orgulho.
+                        </p>
+                    </div>
+
+                    <div class="story__block" data-reveal>
+                        <span class="story__number">04</span>
+                        <p class="story__text">
+                            A marca Panteras 3A nasceu da união de 2026. Não foi encomendada, não foi
+                            imposta — foi criada por quem a veste. E quando os anos passarem, essa
+                            camiseta será o artefato que dirá: <em>"nós estivemos aqui, e deixamos
+                                nossa marca."</em>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── SECTION 07 — EMBLEM ── -->
+        <section class="section section--emblem" id="emblem">
+            <div class="emblem__container">
+                <p class="section__tag">O EMBLEMA</p>
+                <div class="emblem__wrapper">
+                    <img src="assets/emblem.webp" alt="Emblema Panteras 3A" class="emblem__img" id="emblem-img" />
+                </div>
+                <p class="emblem__hint">Passe o cursor sobre o emblema</p>
+            </div>
+        </section>
+
+        <!-- ── SECTION 08 — TURMA PHOTO ── -->
+        <section class="section section--turma" id="turma">
+            <div class="turma__container">
+                <div class="turma__cinema-wrapper reveal-wrapper">
+                    <img src="assets/turma.webp" alt="Foto da turma 3ºA — Colégio Estadual Santa Edwiges"
+                        class="turma__img" />
+                </div>
+                <p class="turma__caption">Foto ilustrativa da turma · 3ºA · 2026</p>
+            </div>
+        </section>
+
+        <!-- ── SECTION 09 — SECOND MARQUEE ── -->
+        <div class="marquee-section marquee-section--reverse" id="marquee-2">
+            <div class="marquee__track marquee__track--reverse">
+                <div class="marquee__content">
+                    <span>COLÉGIO ESTADUAL SANTA EDWIGES</span>
+                    <span class="marquee__dot">◆</span>
+                    <span>PANTERAS 3A</span>
+                    <span class="marquee__dot">◆</span>
+                    <span>EST. 2026</span>
+                    <span class="marquee__dot">◆</span>
+                </div>
+                <div class="marquee__content" aria-hidden="true">
+                    <span>COLÉGIO ESTADUAL SANTA EDWIGES</span>
+                    <span class="marquee__dot">◆</span>
+                    <span>PANTERAS 3A</span>
+                    <span class="marquee__dot">◆</span>
+                    <span>EST. 2026</span>
+                    <span class="marquee__dot">◆</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── SECTION 10 — FOOTER ── -->
+        <footer class="section section--footer" id="footer">
+            <div class="footer__content">
+                <svg class="footer__divider" viewBox="0 0 1200 2" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="0" y1="1" x2="1200" y2="1" stroke="currentColor" stroke-width="0.5"
+                        id="footer-line-svg" />
+                </svg>
+                <h2 class="footer__title">PANTERAS<br /><span class="footer__title--accent">3A</span></h2>
+                <p class="footer__sub">LEGADO É O QUE FICA.</p>
+                <div class="footer__info">
+                    <span>COLÉGIO ESTADUAL SANTA EDWIGES</span>
+                    <span class="footer__info-dot">·</span>
+                    <span>2026</span>
+                </div>
+                <a href="#hero" class="magnetic-btn" id="back-to-top">
+                    <span class="magnetic-btn__text">↑ VOLTAR AO TOPO</span>
+                </a>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- ═══ SCRIPTS ═══ -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>

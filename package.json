@@ -1,0 +1,19 @@
+{
+    "name": "panteras3a",
+    "private": true,
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite --host",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "devDependencies": {
+        "vite": "^6.0.0"
+    },
+    "dependencies": {
+        "gsap": "^3.14.2",
+        "lenis": "^1.3.18-dev.1",
+        "three": "^0.183.2"
+    }
+}

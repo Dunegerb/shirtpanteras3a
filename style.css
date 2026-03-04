@@ -1,0 +1,905 @@
+/* ═══════════════════════════════════════════════════════════
+   PANTERAS 3A — COLÉGIO ESTADUAL SANTA EDWIGES — 2026
+   Futuristic Minimalist · Cinematic · High-End
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── RESET & BASE ──────────────────────────────────────── */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #F1F0F6;
+    --bg-dark: #08080c;
+    --fg: #0a0a0f;
+    --fg-light: #F1F0F6;
+    --accent: #7B2FBE;
+    --accent-soft: #9B59B6;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+html {
+    font-size: 16px;
+}
+
+html.lenis {
+    height: auto;
+}
+
+.lenis.lenis-smooth {
+    scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+    overflow: hidden;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--fg);
+    overflow-x: hidden;
+    cursor: crosshair;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+    background: var(--accent);
+    color: #fff;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+/* ── CURSOR TRAIL CANVAS ─────────────────────────────── */
+#cursor-trail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9990;
+    pointer-events: none;
+}
+
+/* ── MOBILE BLOCK ─────────────────────────────────────── */
+#mobile-block {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: var(--bg-dark);
+    color: var(--fg-light);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.mobile-block__inner {
+    padding: 2rem;
+}
+
+.mobile-block__icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.5;
+}
+
+#mobile-block h1 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    margin-bottom: 1rem;
+}
+
+#mobile-block p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    opacity: 0.6;
+}
+
+@media (max-width: 1024px) {
+    #mobile-block {
+        display: flex;
+    }
+
+    #content,
+    #three-canvas,
+    #loader,
+    #cursor-trail {
+        display: none !important;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LOADER
+   ═══════════════════════════════════════════════════════════ */
+#loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--bg-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 1.2s var(--ease-out-expo), visibility 1.2s var(--ease-out-expo);
+}
+
+#loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loader__content {
+    text-align: center;
+    color: var(--fg-light);
+}
+
+.loader__top-line {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    opacity: 0.4;
+    text-transform: uppercase;
+}
+
+.loader__dot {
+    color: var(--accent);
+    font-size: 0.4rem;
+}
+
+.loader__title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+}
+
+.loader__title-line {
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 12vw, 10rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.9;
+    text-transform: uppercase;
+    display: block;
+}
+
+.loader__title-line--accent {
+    color: var(--accent);
+    font-size: clamp(3rem, 8vw, 7rem);
+}
+
+.loader__bottom {
+    margin-top: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.loader__progress-track {
+    width: 200px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.loader__progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    transition: width 0.3s ease;
+}
+
+.loader__percent {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    opacity: 0.5;
+    min-width: 2.5rem;
+    text-align: right;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   THREE.JS CANVAS
+   ═══════════════════════════════════════════════════════════ */
+#three-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1s var(--ease-out-expo);
+}
+
+#three-canvas.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MAIN CONTENT
+   ═══════════════════════════════════════════════════════════ */
+#content {
+    position: relative;
+    z-index: 2;
+}
+
+/* ── GENERIC SECTION ──────────────────────────────────── */
+.section {
+    min-height: 100vh;
+    padding: 6rem 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+.section__tag {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    opacity: 0.3;
+    margin-bottom: 1.5rem;
+}
+
+.section__title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 5.5rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.92;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+}
+
+.section__body {
+    font-size: 1rem;
+    line-height: 1.9;
+    max-width: 520px;
+    opacity: 0.55;
+    font-weight: 300;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION 01 — HERO
+   ═══════════════════════════════════════════════════════════ */
+.section--hero {
+    justify-content: center;
+    align-items: flex-start;
+    padding: 6rem 6rem;
+    background: var(--bg);
+    min-height: 100vh;
+}
+
+.hero__content {
+    max-width: 90vw;
+}
+
+.hero__tag {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0;
+    margin-bottom: 3rem;
+}
+
+.hero__tag-line {
+    display: inline-block;
+    width: 40px;
+    height: 1px;
+    background: var(--fg);
+    opacity: 0.3;
+}
+
+.hero__title {
+    margin: 0;
+}
+
+/* ── LINE MASK REVEAL ── */
+.line-mask {
+    display: block;
+    overflow: hidden;
+    position: relative;
+}
+
+.line-mask__inner {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 14vw, 13rem);
+    font-weight: 700;
+    letter-spacing: -0.06em;
+    line-height: 0.9;
+    text-transform: uppercase;
+    transform: translateY(110%);
+    will-change: transform;
+}
+
+.line-mask__inner--outline {
+    -webkit-text-stroke: 2px var(--fg);
+    color: transparent;
+    font-size: clamp(4rem, 11vw, 10rem);
+}
+
+.hero__subtitle {
+    margin-top: 2rem;
+}
+
+.hero__subtitle .line-mask__inner {
+    font-size: 0.75rem;
+    letter-spacing: 0.5em;
+    font-weight: 400;
+    opacity: 0.35;
+    line-height: 1.5;
+}
+
+.hero__scroll-hint {
+    position: absolute;
+    bottom: 3rem;
+    right: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    opacity: 0;
+}
+
+.hero__scroll-hint span {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    letter-spacing: 0.4em;
+    opacity: 0.3;
+    writing-mode: vertical-rl;
+}
+
+.hero__scroll-line {
+    width: 1px;
+    height: 60px;
+    background: var(--fg);
+    opacity: 0.12;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero__scroll-line::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: var(--accent);
+    animation: scrollPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+    0% {
+        top: -50%;
+    }
+
+    100% {
+        top: 100%;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION 02 — SHIRT GRAND REVEAL (Pinned Cinematic Zoom)
+   ═══════════════════════════════════════════════════════════ */
+.section--shirt-reveal {
+    min-height: 300vh;
+    padding: 0;
+    background: var(--bg);
+}
+
+.shirt-reveal__sticky {
+    position: sticky;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background: var(--bg);
+}
+
+.shirt-reveal__vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 50% 50% at center,
+            transparent 0%,
+            rgba(241, 240, 246, 0.3) 50%,
+            rgba(241, 240, 246, 0.85) 75%,
+            var(--bg) 100%);
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.1s;
+}
+
+.shirt-reveal__img {
+    width: auto;
+    max-width: 60vw;
+    max-height: 80vh;
+    object-fit: contain;
+    will-change: transform;
+    filter: drop-shadow(0 30px 80px rgba(0, 0, 0, 0.08));
+    z-index: 2;
+}
+
+.shirt-reveal__text-overlay {
+    position: absolute;
+    bottom: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+    opacity: 0;
+}
+
+.shirt-reveal__caption {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--fg);
+    opacity: 0.15;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION 03 — DETAILS
+   ═══════════════════════════════════════════════════════════ */
+.section--details {
+    background: var(--bg);
+    padding: 8rem 4rem;
+}
+
+.details__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.details__image {
+    position: relative;
+}
+
+/* ── CLIP-PATH REVEAL WRAPPER ── */
+.reveal-wrapper {
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    overflow: hidden;
+    will-change: clip-path;
+}
+
+.reveal-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transform: scale(1.3);
+    will-change: transform;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MARQUEE
+   ═══════════════════════════════════════════════════════════ */
+.marquee-section {
+    padding: 2.5rem 0;
+    overflow: hidden;
+    border-top: 1px solid rgba(10, 10, 15, 0.06);
+    border-bottom: 1px solid rgba(10, 10, 15, 0.06);
+    background: var(--bg);
+}
+
+.marquee-section--reverse {
+    background: var(--bg-dark);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.marquee-section--reverse .marquee__content span {
+    color: var(--fg-light);
+}
+
+.marquee__track {
+    display: flex;
+    width: max-content;
+    animation: marqueeScroll 25s linear infinite;
+}
+
+.marquee__track--reverse {
+    animation-direction: reverse;
+}
+
+.marquee__content {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    padding: 0 1.5rem;
+    white-space: nowrap;
+}
+
+.marquee__content span {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg);
+}
+
+.marquee__dot {
+    color: var(--accent) !important;
+    font-size: 0.6rem !important;
+    opacity: 0.6;
+}
+
+@keyframes marqueeScroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION 05 — PANTERA (3D)
+   ═══════════════════════════════════════════════════════════ */
+.section--pantera {
+    justify-content: flex-end;
+    align-items: center;
+    min-height: 120vh;
+    background: transparent;
+    pointer-events: none;
+}
+
+.pantera__overlay {
+    text-align: center;
+    pointer-events: none;
+    margin-bottom: 6rem;
+}
+
+.pantera__label {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    opacity: 0;
+    margin-bottom: 1rem;
+}
+
+.pantera__title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 10vw, 10rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.85;
+    text-transform: uppercase;
+    color: var(--fg);
+    opacity: 0;
+}
+
+.pantera__desc {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    opacity: 0;
+    margin-top: 1rem;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION 06 — STORYTELLING
+   ═══════════════════════════════════════════════════════════ */
+.section--story {
+    background: var(--bg-dark);
+    color: var(--fg-light);
+    padding: 10rem 4rem;
+}
+
+.story__container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.section--story .section__tag {
+    opacity: 0.2;
+}
+
+.story__title {
+    color: var(--fg-light);
+    margin-bottom: 5rem;
+}
+
+.story__blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+}
+
+.story__block {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 2rem;
+    align-items: start;
+    opacity: 0;
+    transform: translateY(60px);
+}
+
+.story__number {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    opacity: 0.2;
+    padding-top: 0.3rem;
+    color: var(--accent-soft);
+}
+
+.story__text {
+    font-size: 1.05rem;
+    line-height: 2;
+    font-weight: 300;
+    opacity: 0.6;
+}
+
+.story__text strong {
+    font-weight: 600;
+    color: var(--accent-soft);
+    opacity: 1;
+}
+
+.story__text em {
+    font-style: italic;
+    opacity: 0.9;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION 07 — EMBLEM
+   ═══════════════════════════════════════════════════════════ */
+.section--emblem {
+    background: var(--bg-dark);
+    color: var(--fg-light);
+    padding: 8rem 4rem;
+    min-height: 80vh;
+}
+
+.emblem__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.section--emblem .section__tag {
+    opacity: 0.2;
+    margin-bottom: 3rem;
+}
+
+.emblem__wrapper {
+    width: 320px;
+    height: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.emblem__img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: grayscale(100%) brightness(0.4);
+    transition: filter 0.8s var(--ease-out-expo);
+    cursor: pointer;
+}
+
+.emblem__img:hover {
+    filter: grayscale(0%) brightness(1);
+}
+
+.emblem__hint {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    opacity: 0.15;
+    margin-top: 2rem;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION 08 — TURMA PHOTO (Cinema 2.35:1)
+   ═══════════════════════════════════════════════════════════ */
+.section--turma {
+    background: var(--bg-dark);
+    color: var(--fg-light);
+    padding: 6rem 4rem;
+    min-height: auto;
+}
+
+.turma__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.turma__cinema-wrapper {
+    aspect-ratio: 2.35 / 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.turma__cinema-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.turma__caption {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    opacity: 0.15;
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION 10 — FOOTER
+   ═══════════════════════════════════════════════════════════ */
+.section--footer {
+    background: var(--bg-dark);
+    color: var(--fg-light);
+    min-height: 70vh;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 8rem 4rem;
+}
+
+.footer__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.footer__divider {
+    width: 100%;
+    max-width: 600px;
+    color: rgba(255, 255, 255, 0.08);
+    margin-bottom: 3rem;
+}
+
+.footer__title {
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 8vw, 8rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.9;
+    text-transform: uppercase;
+}
+
+.footer__title--accent {
+    color: var(--accent);
+}
+
+.footer__sub {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    opacity: 0.2;
+}
+
+.footer__info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    opacity: 0.15;
+    margin-top: 1rem;
+}
+
+.footer__info-dot {
+    color: var(--accent);
+}
+
+/* ── MAGNETIC BUTTON ── */
+.magnetic-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--fg-light);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-top: 3rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.4s ease;
+    will-change: transform;
+}
+
+.magnetic-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s var(--ease-out-expo);
+    z-index: -1;
+}
+
+.magnetic-btn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.magnetic-btn:hover {
+    border-color: var(--accent);
+}
+
+.magnetic-btn__text {
+    position: relative;
+    z-index: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UTILITY & ANIMATION HELPERS
+   ═══════════════════════════════════════════════════════════ */
+.will-change-transform {
+    will-change: transform;
+}
+
+.will-change-opacity {
+    will-change: opacity;
+}
