@@ -121,7 +121,7 @@ function initCursorTrail() {
     resize();
     window.addEventListener("resize", resize);
 
-    window.addEventListener("mousemove", (e) => {
+    window.addEventListener("pointermove", (e) => {
         trail.push({ x: e.clientX, y: e.clientY, time: performance.now() });
     });
 
@@ -189,7 +189,7 @@ function initMagneticButtons() {
     document.querySelectorAll(".magnetic-btn").forEach(btn => {
         const wrapper = btn;
 
-        wrapper.addEventListener("mousemove", (e) => {
+        wrapper.addEventListener("pointermove", (e) => {
             const { left, top, width, height } = wrapper.getBoundingClientRect();
             const centerX = left + width / 2;
             const centerY = top + height / 2;
@@ -203,7 +203,7 @@ function initMagneticButtons() {
             });
         });
 
-        wrapper.addEventListener("mouseleave", () => {
+        wrapper.addEventListener("pointerleave", () => {
             gsap.to(wrapper, {
                 x: 0, y: 0,
                 duration: 1,
